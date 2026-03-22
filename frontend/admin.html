@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Hostel Management</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <div class="header">
+            <div>
+                <h2>Admin Dashboard</h2>
+                <p>Welcome, <span id="userName">User</span></p>
+            </div>
+            <div style="display: flex; gap: 1rem;">
+                <button onclick="openPasswordModal()" class="btn" style="border: 1px solid var(--border-color); background: white;">Change Password</button>
+                <button onclick="logout()" class="btn btn-danger">Logout</button>
+            </div>
+        </div>
+
+        <div class="grid-2">
+            <!-- Add User Form -->
+            <div class="card">
+                <h3>Add New User</h3>
+                <form id="addUserForm" style="margin-top: 1rem;">
+                    <div class="form-group">
+                        <label>Full Name</label>
+                        <input type="text" id="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Username</label>
+                        <input type="text" id="username" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Email ID</label>
+                        <input type="email" id="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Password</label>
+                        <input type="password" id="password" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Role</label>
+                        <select id="role" required onchange="toggleRoleFields()">
+                            <option value="student">Student</option>
+                            <option value="committee">Committee</option>
+                            <option value="warden">Warden</option>
+                            <option value="admin">Admin</option>
+                        </select>
+                    </div>
+                    
+                    <div id="studentFields">
+                        <div class="form-group">
+                            <label>Room No</label>
+                            <input type="text" id="room_no">
+                        </div>
+                        <div class="form-group">
+                            <label>Block</label>
+                            <input type="text" id="block">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group hidden" id="typeField">
+                        <label>Hostel Type</label>
+                        <select id="hostel_type">
+                            <option value="LH">Ladies Hostel (LH)</option>
+                            <option value="MH">Men's Hostel (MH)</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group hidden" id="groupField">
+                        <label>Assigned Hostel Group</label>
+                        <select id="hostel_group">
+                            <option value="LHA&C">LHA & C</option>
+                            <option value="LHB">LHB</option>
+                            <option value="MHA">MHA</option>
+                            <option value="MHB">MHB</option>
+                        </select>
+                    </div>
+
+                    <div id="addMsg" class="error-msg"></div>
+                    <button type="submit" class="btn btn-primary">Add User</button>
+                </form>
+            </div>
+
+            <!-- Users List -->
+            <div class="card">
+                <h3>System Users</h3>
+                <table id="usersTable">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Username</th>
+                            <th>Email</th>
+                            <th>Role</th>
+                            <th>Group / Blk</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Populated by JS -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script src="/js/auth.js"></script>
+    <script src="/js/admin.js"></script>
+</body>
+</html>

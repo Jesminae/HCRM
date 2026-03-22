@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hostel Management System - Login</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="login-body">
+    <div class="login-container">
+        <h2>Hostel Management System</h2>
+        <form id="loginForm">
+            <div class="form-group">
+                <label>Username / Email ID</label>
+                <input type="text" id="email" required placeholder="Enter username or email">
+            </div>
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" id="password" required placeholder="Enter password">
+                <div style="text-align: right; margin-top: 5px;">
+                    <a href="#" onclick="openForgotModal(event)" style="font-size: 0.85rem; color: var(--primary-color); text-decoration: none;">Forgot Password?</a>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Role</label>
+                <select id="role" required>
+                    <option value="student">Student</option>
+                    <option value="lh_ac_committee">LH A&C Committee</option>
+                    <option value="lh_b_committee">LHB Committee</option>
+                    <option value="mha_committee">MHA Committee</option>
+                    <option value="mhb_committee">MHB Committee</option>
+                    <option value="warden">Warden</option>
+                    <option value="admin">Admin</option>
+                </select>
+            </div>
+            <div id="errorMsg" class="error-msg"></div>
+            <button type="submit" class="btn btn-primary">Login</button>
+        </form>
+    </div>
+    
+    <script src="/js/auth.js"></script>
+</body>
+</html>

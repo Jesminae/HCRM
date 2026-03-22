@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Committee Dashboard - Hostel Management</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <div class="header">
+            <div>
+                <h2>Committee Dashboard</h2>
+                <p>Welcome, <span id="userName">User</span></p>
+            </div>
+            <div style="display: flex; gap: 1rem;">
+                <button onclick="openPasswordModal()" class="btn" style="border: 1px solid var(--border-color); background: white;">Change Password</button>
+                <button onclick="logout()" class="btn btn-danger">Logout</button>
+            </div>
+        </div>
+
+        <div class="grid-2">
+            <!-- Configure Meal Setup -->
+            <div class="card">
+                <h3>Configure Meals</h3>
+                <form id="mealSettingsForm" style="margin-top: 1rem;">
+                    <div class="form-group" style="display: flex; gap: 1rem; align-items: flex-end;">
+                        <div style="flex: 1;">
+                            <label>Date</label>
+                            <input type="date" id="settingDate" required>
+                        </div>
+                        <button type="button" class="btn btn-secondary" onclick="buildSettingsTable()">View</button>
+                    </div>
+                    
+                    <table class="slot-table" style="margin-bottom: 1rem; width: 100%;">
+                        <thead>
+                            <tr>
+                                <th>Time Slot</th>
+                                <th>Enable Entry</th>
+                                <th>Non-Veg Options?</th>
+                            </tr>
+                        </thead>
+                        <tbody id="settingsTableBody">
+                            <!-- JS injected -->
+                        </tbody>
+                    </table>
+
+                    <div id="settingMsg" class="error-msg"></div>
+                    <button type="submit" class="btn btn-primary">Save Settings</button>
+                </form>
+            </div>
+
+            <div class="card">
+                <h3>Monthly Student Meal Counts</h3>
+                <div class="form-group" style="display: flex; gap: 1rem; align-items: flex-end;">
+                    <div style="flex: 1;">
+                        <input type="month" id="monthlyReportDate" required>
+                    </div>
+                    <button class="btn btn-primary" onclick="loadMonthlyReport()">View</button>
+                </div>
+                <table id="monthlyTable" style="margin-top: 1rem;">
+                    <thead>
+                        <tr>
+                            <th>Student Name</th>
+                            <th>Block</th>
+                            <th>Room No</th>
+                            <th>Total Meals</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Attendance Review -->
+        <div class="card" style="margin-top: 1.5rem;">
+            <div class="flex-between" style="border-bottom: 2px solid var(--border-color); padding-bottom: 0.5rem; margin-bottom: 1rem;">
+                <h3>Daily Attendance Review</h3>
+                <div style="display: flex; gap: 1rem;">
+                    <input type="date" id="attReviewDate" class="btn" style="background:#fff; border: 1px solid var(--border-color); color:var(--text-color);">
+                    <button class="btn btn-primary" onclick="loadAttendanceReview()">View</button>
+                </div>
+            </div>
+            <div class="table-container" style="max-height: 300px; overflow-y: auto;">
+                <table class="data-table" id="attReviewTable">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Block</th>
+                            <th>Room No</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Populated dynamically -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="card" style="margin-top: 1.5rem;">
+            <h3>Detailed Daily Reports</h3>
+            <div class="form-group" style="display: flex; gap: 1rem; align-items: flex-end; max-width: 400px;">
+                <div style="flex: 1;">
+                    <label>Select Date</label>
+                    <input type="date" id="reportDate" required>
+                </div>
+                <button class="btn btn-primary" onclick="loadDetailedReport()">View</button>
+            </div>
+            
+            <div style="overflow-x: auto;">
+                <table id="detailedReportTable" style="margin-top: 1rem; min-width: 800px;">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Room</th>
+                            <th>Block</th>
+                            <th>Morning</th>
+                            <th>Noon</th>
+                            <th>Evening</th>
+                            <th>Night</th>
+                            <th>Icecream</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Dynamic -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script src="/js/auth.js"></script>
+    <script src="/js/committee.js"></script>
+</body>
+</html>
