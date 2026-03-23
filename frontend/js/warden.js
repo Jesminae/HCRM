@@ -80,7 +80,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     loadStudentReport();
     loadAttendanceReview();
-    loadWardenComplaints();
+    loadComplaints();
 });
 
 async function loadStudentReport() {
@@ -255,7 +255,7 @@ async function resolveComplaint(id) {
             body: JSON.stringify({ status: 'Resolved' })
         });
         if (res.ok) {
-            loadWardenComplaints();
+            loadComplaints();
         } else {
             alert('Failed to update status');
         }
