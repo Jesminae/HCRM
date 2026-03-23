@@ -220,3 +220,344 @@ th {
 .badge-success { background-color: var(--success-color); }
 .badge-danger { background-color: var(--error-color); }
 .badge-warning { background-color: #f59e0b; color: white; }
+
+/* ========================================================= */
+/* GCEK Login Page Styles                                   */
+/* ========================================================= */
+
+* {
+    outline: none !important;
+    -moz-outline: none !important;
+}
+
+html {
+    font-size: 100%;
+    -webkit-text-size-adjust: 100%;
+    -ms-text-size-adjust: 100%;
+}
+
+body.gcek-login-body {
+    margin: 0;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 13px;
+    line-height: 18px;
+    color: #333333;
+    background-color: #ffffff;
+}
+
+.container-fluid {
+    padding-top: 15px !important;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+.container-fluid:before, .container-fluid:after {
+    display: table;
+    content: "";
+}
+.container-fluid:after {
+    clear: both;
+}
+
+.gcek-login-body {
+    background-color: #f9f9f9;
+    background-image: 
+        radial-gradient(circle at 15% 25%, rgba(255, 182, 193, 0.4) 0%, transparent 40%),
+        radial-gradient(circle at 85% 75%, rgba(176, 224, 230, 0.5) 0%, transparent 40%),
+        radial-gradient(circle at 50% 10%, rgba(255, 255, 224, 0.6) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(152, 251, 152, 0.4) 0%, transparent 35%);
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow-x: hidden;
+    margin: 0;
+    font-family: Arial, sans-serif;
+}
+
+.gcek-header {
+    background: #ffffff;
+    border-bottom: 3px solid #ffd700;
+    padding: 15px 20px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.logo-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo-box {
+    width: 80px;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.logo-box img {
+    max-height: 100%;
+    max-width: 100%;
+}
+
+.header-text {
+    text-align: center;
+    color: #1a365d;
+    flex: 1;
+    padding: 0 20px;
+}
+
+.header-text h1 {
+    font-size: 1.4rem;
+    font-weight: bold;
+    margin-bottom: 8px;
+    letter-spacing: 0.5px;
+    color: #000;
+}
+
+.header-text .address {
+    font-size: 0.85rem;
+    color: #3b82f6;
+    margin-bottom: 8px;
+}
+
+.header-text .contact-info {
+    font-size: 0.8rem;
+    color: #3b82f6;
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+.header-text .contact-info a {
+    color: #3b82f6;
+    text-decoration: none;
+}
+.header-text .contact-info a:hover {
+    text-decoration: underline;
+}
+
+.login-page-wrapper {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px 20px;
+    position: relative;
+    max-width: 1100px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+/* Gold Textured Plaque CSS */
+.plaque-container {
+    background: linear-gradient(135deg, #d4af37 0%, #aa7c11 30%, #f3e5ab 50%, #8a5a19 70%, #d4af37 100%);
+    border: 3px solid #5a3c05;
+    box-shadow: 
+        inset 0 0 10px rgba(0,0,0,0.5), 
+        inset 1px 1px 2px rgba(255,255,255,0.8),
+        3px 3px 6px rgba(0,0,0,0.4);
+    padding: 25px;
+    border-radius: 4px;
+    width: 280px;
+    height: 200px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    color: #fff;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 1;
+}
+.plaque-container::before {
+    content: '';
+    position: absolute;
+    top: 5px; left: 5px; right: 5px; bottom: 5px;
+    border: 1px dashed rgba(255, 255, 255, 0.4);
+    pointer-events: none;
+}
+.plaque-container::after {
+    /* Screw holes in corners */
+    content: '';
+    position: absolute;
+    top: 10px; left: 10px; right: 10px; bottom: 10px;
+    background: 
+        radial-gradient(circle at 0 0, #333 3px, transparent 4px),
+        radial-gradient(circle at 100% 0, #333 3px, transparent 4px),
+        radial-gradient(circle at 100% 100%, #333 3px, transparent 4px),
+        radial-gradient(circle at 0 100%, #333 3px, transparent 4px);
+    pointer-events: none;
+}
+
+.plaque-container.left-plaque {
+    left: 20px;
+}
+
+.plaque-container.right-plaque {
+    right: 20px;
+}
+
+.plaque-content h3 {
+    font-size: 1.3rem;
+    margin-bottom: 12px;
+    letter-spacing: 1.5px;
+    color: #fffde7;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.plaque-content p {
+    font-size: 0.85rem;
+    line-height: 1.5;
+    font-weight: 500;
+}
+
+.login-card {
+    background: #ffffff;
+    padding: 40px 30px;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+    width: 360px;
+    position: relative;
+    z-index: 2;
+    /* Soften edges slightly */
+    border-radius: 2px;
+}
+
+.gcek-form {
+    display: flex;
+    flex-direction: column;
+}
+
+.input-row {
+    display: grid;
+    grid-template-columns: 110px 1fr;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 18px;
+}
+
+.input-row label {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #4caf50; /* Green labels */
+    margin-bottom: 0;
+    white-space: nowrap;
+    text-align: right;
+    padding-right: 5px;
+}
+
+.input-row label span {
+    color: #ef4444;
+}
+
+.input-row input, .input-row select {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 8px 10px;
+    border: 1px solid #d1d5db;
+    border-radius: 2px;
+    font-size: 0.9rem;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.input-row input:focus, .input-row select:focus {
+    border-color: #4caf50; /* Green outline on focus */
+}
+
+.pwd-wrapper {
+    flex: 1;
+    position: relative;
+    display: flex;
+}
+.pwd-wrapper input {
+    padding-right: 35px;
+    width: 100%;
+}
+
+.eye-icon {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: #6b7280;
+    font-size: 1.1rem;
+    background: white;
+    padding-left: 5px;
+}
+
+.login-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+}
+
+.btn-success-solid {
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    padding: 8px 25px;
+    border-radius: 3px;
+    font-size: 0.95rem;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: background-color 0.2s;
+}
+
+.btn-success-solid:hover {
+    background-color: #43a047;
+}
+
+.forgot-link {
+    margin-top: 15px;
+    font-size: 0.8rem;
+    color: #3b82f6;
+    text-decoration: none;
+}
+
+.forgot-link:hover {
+    text-decoration: underline;
+}
+
+.error-msg-gcek {
+    color: #ef4444;
+    font-size: 0.85rem;
+    text-align: center;
+    margin-top: 15px;
+    min-height: 18px;
+    font-weight: 500;
+}
+
+.gcek-footer {
+    text-align: center;
+    padding: 15px;
+    color: #9ca3af;
+    font-size: 0.8rem;
+    background: #f8fafc;
+    border-top: 1px solid #e2e8f0;
+}
+
+/* Make it responsive */
+@media (max-width: 950px) {
+    .plaque-container {
+        display: none;
+    }
+    .header-text h1 {
+        font-size: 1.1rem;
+    }
+    .header-text .contact-info {
+        flex-direction: column;
+        gap: 5px;
+        align-items: center;
+    }
+}
