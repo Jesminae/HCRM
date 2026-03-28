@@ -200,26 +200,37 @@ router.get('/meals/recent', async (req, res) => {
             grouped[dtStr].total += m.count;
         });
 
-        // Get per_day_rate
+        // Get rates and fee calculation from Mess_Bills
         const [user] = await db.query('SELECT u.hostel_type, s.block FROM Users u JOIN Students s ON u.id = s.user_id WHERE s.id = ?', [student_id]);
         const group = user.length > 0 ? mapStudentToGroup(user[0].block, user[0].hostel_type) : 'ALL';
         
-        let [fees] = await db.query('SELECT per_day_rate FROM Fees WHERE month = ? AND hostel_group = ?', [month, group]);
-        if (fees.length === 0) {
-            [fees] = await db.query('SELECT per_day_rate FROM Fees WHERE month = ? AND hostel_group = "ALL"', [month]);
-        }
-        const perDayRate = fees.length > 0 ? parseFloat(fees[0].per_day_rate) : 0;
-        
         const summaryArr = Object.values(grouped).sort((a,b) => new Date(b.date) - new Date(a.date));
         
-        const totalMealsOverall = summaryArr.reduce((acc, curr) => acc + curr.total, 0);
+        const totalPoints = summaryArr.reduce((acc, curr) => acc + curr.total, 0);
         const distinctDays = summaryArr.filter(curr => curr.total > 0).length;
+
+        let [bills] = await db.query('SELECT rate_per_day, estt_per_head, cook_charge_per_head, fine_due_date, no_fine_due_date FROM Mess_Bills WHERE month = ? AND hostel_group = ?', [month, group]);
+        const ratePerDay = bills.length > 0 ? parseFloat(bills[0].rate_per_day) : 0;
+        const esttPerHead = bills.length > 0 ? parseFloat(bills[0].estt_per_head) : 0;
+        const cookPerHead = bills.length > 0 ? parseFloat(bills[0].cook_charge_per_head) : 0;
+        
+        let totalFee = 0;
+        if (bills.length > 0) {
+            totalFee = (totalPoints * ratePerDay) + esttPerHead + cookPerHead;
+        }
 
         res.json({
             meals: summaryArr,
             totalMeals: distinctDays,
-            perDayRate,
-            totalFee: distinctDays * perDayRate
+            totalPoints,
+            perDayRate: ratePerDay,
+            esttPerHead,
+            cookPerHead,
+            totalFee: Math.round(totalFee), // the actual fee
+            fineDates: bills.length > 0 ? {
+                fine_due_date: bills[0].fine_due_date,
+                no_fine_due_date: bills[0].no_fine_due_date
+            } : null
         });
 
     } catch (err) {

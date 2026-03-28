@@ -34,6 +34,18 @@
                 <div class="feature-icon bg-green">📊</div>
                 <span>Dashboard Stats</span>
             </div>
+            <div class="feature-card" onclick="openSection('manageBillsSection'); if(typeof initBills === 'function') initBills();">
+                <div class="feature-icon" style="background: #ef4444; color: white;">🧾</div>
+                <span>Manage Bills</span>
+            </div>
+            <div class="feature-card" onclick="openSection('generateBillSection'); if(typeof initGenerateBill === 'function') initGenerateBill();">
+                <div class="feature-icon" style="background: #8b5cf6; color: white;">📝</div>
+                <span>Generate Mess Bill</span>
+            </div>
+            <div class="feature-card" onclick="openSection('messReportsSection'); if(typeof initReports === 'function') initReports();">
+                <div class="feature-icon" style="background: #ec4899; color: white;">📋</div>
+                <span>Mess Reports</span>
+            </div>
         </div>
 
         <!-- HIDDEN VIEW SECTIONS -->
@@ -201,6 +213,166 @@
                     <tbody>
                     </tbody>
                 </table>
+            </div>
+        </div>
+
+        <!-- 4. Manage Bills Section -->
+        <div id="manageBillsSection" class="view-section">
+            <div class="back-btn" onclick="closeSection('manageBillsSection')">← Back to Dashboard</div>
+            <h3>Manage Bills</h3>
+            <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+                <input type="month" id="billsMonth" style="padding: 8px; border-radius: 4px; border: 1px solid #ccc; flex: 1;">
+                <select id="billsHostelGroup" style="padding: 8px; border-radius: 4px; border: 1px solid #ccc; flex: 1;">
+                    <option value="LHA&C">LHA & C</option>
+                    <option value="LHB">LHB</option>
+                    <option value="MHA">MHA</option>
+                    <option value="MHB">MHB</option>
+                </select>
+                <button class="btn btn-primary" onclick="loadBills()">Load</button>
+            </div>
+
+            <div style="background: white; padding: 15px; border-radius: 12px; margin-bottom: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.03);">
+                <h4>Add New Bill</h4>
+                <form id="addBillForm" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                    <div class="form-group"><label>SI No</label><input type="text" id="billSiNo"></div>
+                    <div class="form-group"><label>Invoice No</label><input type="text" id="billInvoiceNo"></div>
+                    <div class="form-group"><label>Shop Name</label><input type="text" id="billShop" required></div>
+                    <div class="form-group"><label>Date</label><input type="date" id="billDate" required></div>
+                    <div class="form-group"><label>Bill Amount</label><input type="number" step="0.01" id="billAmount" required oninput="calcBillTotal()"></div>
+                    <div class="form-group"><label>Debt (If any)</label><input type="number" step="0.01" id="billDebt" value="0" oninput="calcBillTotal()"></div>
+                    <div class="form-group"><label>Total</label><input type="number" id="billTotalCalc" disabled></div>
+                    <div class="form-group" style="display: flex; align-items: flex-end;">
+                        <button type="submit" class="btn btn-primary" style="width: 100%;">Add Bill</button>
+                    </div>
+                </form>
+            </div>
+
+            <div style="overflow-x: auto; background: white; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.03);">
+                <table id="billsTable" style="margin: 0; min-width: 600px;">
+                    <thead style="background: #f1f5f9;">
+                        <tr>
+                            <th>SI No</th>
+                            <th>Date</th>
+                            <th>Invoice No</th>
+                            <th>Shop Name</th>
+                            <th>Amount</th>
+                            <th>Debt</th>
+                            <th>Total</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- 5. Generate Mess Bill Section -->
+        <div id="generateBillSection" class="view-section">
+            <div class="back-btn" onclick="closeSection('generateBillSection')">← Back to Dashboard</div>
+            <h3>Generate Mess Bill</h3>
+            
+            <div style="background: white; padding: 15px; border-radius: 12px; margin-bottom: 15px; box-shadow: 0 2px 10px rgba(0,0,0,0.03);">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px;">
+                    <div class="form-group"><label>Month</label><input type="month" id="genMonth" required></div>
+                    <div class="form-group">
+                        <label>Hostel Group</label>
+                        <select id="genGroup" required>
+                            <option value="LHA&C">LHA & C</option>
+                            <option value="LHB">LHB</option>
+                            <option value="MHA">MHA</option>
+                            <option value="MHB">MHB</option>
+                        </select>
+                    </div>
+                    <div class="form-group"><label>Opening Balance</label><input type="number" step="0.01" id="genOpening" value="0"></div>
+                    <div class="form-group"><label>Closing Stock</label><input type="number" step="0.01" id="genClosing" value="0"></div>
+                    <div class="form-group"><label>Guest Charge</label><input type="number" step="0.01" id="genGuest" value="0"></div>
+                    <div class="form-group"><label>Establishment Charge (Block)</label><input type="number" step="0.01" id="genEstt" value="0"></div>
+                    <div class="form-group"><label>Cook Charge (All Messes)</label><input type="number" step="0.01" id="genCook" value="0"></div>
+                </div>
+                <!-- Fines -->
+                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 15px; padding-top: 10px; border-top: 1px solid #eee;">
+                    <div class="form-group"><label>No Fine Due Date</label><input type="date" id="noFineDate"></div>
+                    <div class="form-group"><label>Rs.30 Fine Due Date</label><input type="date" id="fineDate"></div>
+                    <div class="form-group"><label>Removal Due Date</label><input type="date" id="removalDate"></div>
+                </div>
+                <button class="btn btn-primary" style="width: 100%;" onclick="calculateMessBill()">Calculate Bill</button>
+            </div>
+
+            <!-- Printable Bill Preview -->
+            <div id="printBillArea" class="hidden" style="background: white; padding: 20px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.03);">
+                <div style="text-align: center; margin-bottom: 20px; border-bottom: 2px solid #ccc; padding-bottom: 10px;">
+                    <h3 style="margin: 0; text-transform: uppercase;">MESS BILL CALCULATION FOR THE MONTH OF <span id="lblMonth"></span></h3>
+                    <h4 style="margin: 5px 0 0 0;"><span id="lblGroup"></span> BLOCKS</h4>
+                </div>
+                <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;" border="1">
+                    <thead style="background: #f1f5f9;">
+                        <tr><th style="padding: 5px; text-align: left;">Details of Expenditure</th><th style="padding: 5px;">Amount (Rs)</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td style="padding: 5px;">OPENING BALANCE</td><td style="padding: 5px; text-align: right;" id="resOpBal"></td></tr>
+                        <tr><td style="padding: 5px;">PURCHASE</td><td style="padding: 5px; text-align: right;" id="resPurch"></td></tr>
+                        <tr style="font-weight: bold; background: #fafafa;"><td style="padding: 5px; text-align: right;">TOTAL</td><td style="padding: 5px; text-align: right;" id="resSubTot1"></td></tr>
+                        <tr><td style="padding: 5px;">GUEST CHARGE</td><td style="padding: 5px; text-align: right;" id="resGuest"></td></tr>
+                        <tr><td style="padding: 5px;">CLOSING STOCK</td><td style="padding: 5px; text-align: right;" id="resClosing"></td></tr>
+                        <tr style="font-weight: bold; background: #fafafa;"><td style="padding: 5px; text-align: right;">TOTAL</td><td style="padding: 5px; text-align: right;" id="resSubTot2"></td></tr>
+                        <tr><td style="padding: 5px; font-weight: bold;">NET EXPENDITURE</td><td style="padding: 5px; text-align: right; font-weight: bold;" id="resNet"></td></tr>
+                        
+                        <tr><td style="padding: 5px;">TOTAL NO. OF INMATES</td><td style="padding: 5px; text-align: right;" id="resInmates"></td></tr>
+                        <tr><td style="padding: 5px;">TOTAL NO OF POINTS</td><td style="padding: 5px; text-align: right;" id="resPoints"></td></tr>
+                        <tr style="background: #e2e8f0; font-weight: bold;"><td style="padding: 5px;">RATE PER DAY</td><td style="padding: 5px; text-align: right;" id="resRate"></td></tr>
+                        
+                        <tr><td style="padding: 5px;">ESTABLISHMENT CHARGE</td><td style="padding: 5px; text-align: right;" id="resEsttCharge"></td></tr>
+                        <tr style="background: #e2e8f0; font-weight: bold;"><td style="padding: 5px;">ESTT. PER HEAD</td><td style="padding: 5px; text-align: right;" id="resEsttHead"></td></tr>
+                        
+                        <tr><td style="padding: 5px;">TOTAL NUMBER OF INMATES IN ALL MESSES</td><td style="padding: 5px; text-align: right;" id="resAllInmates"></td></tr>
+                        <tr><td style="padding: 5px;">COOK CHARGE (all messes)</td><td style="padding: 5px; text-align: right;" id="resCookCharge"></td></tr>
+                        <tr style="background: #e2e8f0; font-weight: bold;"><td style="padding: 5px;">COOK CHARGE PER HEAD</td><td style="padding: 5px; text-align: right;" id="resCookHead"></td></tr>
+                    </tbody>
+                </table>
+
+                <div style="font-size: 0.9rem; margin-top: 20px; border-top: 1px solid #ccc; padding-top: 20px;">
+                    <p>Mess dues will be collected without fine up to <strong id="lblNoFineDate">___</strong></p>
+                    <p>Mess dues will be collected with fine of Rs.30/- up to <strong id="lblFineDate">___</strong></p>
+                    <p>Afterwards an additional fine of Re 1/- per day will be charged for late payment. Name will be removed from the Hostel Roll if payment is not made on or before <strong id="lblRemovalDate">___</strong></p>
+                </div>
+
+                <div style="margin-top: 40px; display: flex; justify-content: flex-end; padding-right: 50px;">
+                    <div style="text-align: center;">
+                        <p style="margin: 0; padding-bottom: 40px;">Warden</p>
+                        <strong>Govt. College of Engineering<br>Kannur</strong>
+                    </div>
+                </div>
+            </div>
+
+            <div id="billActions" class="hidden" style="margin-top: 15px; display: flex; gap: 10px;">
+                <button class="btn btn-primary" style="flex: 1;" onclick="saveMessBill()">Save & Publish</button>
+                <button class="btn btn-secondary" style="flex: 1;" onclick="printMessBill()">Print Bill</button>
+            </div>
+        </div>
+
+        <!-- 6. Mess Reports Section -->
+        <div id="messReportsSection" class="view-section">
+            <div class="back-btn" onclick="closeSection('messReportsSection')">← Back to Dashboard</div>
+            <h3>Mess Reports</h3>
+
+            <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+                <select id="reportType" style="padding: 8px; border-radius: 4px; border: 1px solid #ccc;" onchange="toggleReportType()">
+                    <option value="daily">Daily Report</option>
+                    <option value="monthly">Monthly Report</option>
+                </select>
+                <div id="dailyInput"><input type="date" id="reportDate" style="padding: 8px; border-radius: 4px; border: 1px solid #ccc;"></div>
+                <div id="monthlyInput" class="hidden"><input type="month" id="reportMonth" style="padding: 8px; border-radius: 4px; border: 1px solid #ccc;"></div>
+                <select id="reportGroup" style="padding: 8px; border-radius: 4px; border: 1px solid #ccc;">
+                    <option value="LHA&C">LHA & C</option>
+                    <option value="LHB">LHB</option>
+                    <option value="MHA">MHA</option>
+                    <option value="MHB">MHB</option>
+                </select>
+                <button class="btn btn-primary" onclick="loadMessReports()">Load</button>
+            </div>
+
+            <div id="reportsContainer" style="overflow-x: auto; background: white; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.03);">
+                <!-- Populated by JS -->
             </div>
         </div>
 

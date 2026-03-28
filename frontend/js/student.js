@@ -160,9 +160,26 @@ async function loadSummary() {
         const data = await res.json();
 
         if (res.ok) {
-            document.getElementById('totalMeals').textContent = data.totalMeals;
+            document.getElementById('totalMeals').textContent = data.totalPoints;
             document.getElementById('totalFee').textContent = data.totalFee.toFixed(2);
-            document.getElementById('rateDisplay').textContent = data.perDayRate;
+            
+            const elPoints = document.getElementById('valPoints');
+            if (elPoints) {
+                elPoints.textContent = data.totalPoints;
+                document.getElementById('valRate').textContent = parseFloat(data.perDayRate).toFixed(2);
+                document.getElementById('valEstt').textContent = parseFloat(data.esttPerHead).toFixed(2);
+                document.getElementById('valCook').textContent = parseFloat(data.cookPerHead).toFixed(2);
+                document.getElementById('valTotalFee').textContent = data.totalFee.toFixed(2);
+                
+                const finesInfo = document.getElementById('finesInfo');
+                if (data.fineDates && (data.fineDates.fine_due_date || data.fineDates.no_fine_due_date)) {
+                    finesInfo.classList.remove('hidden');
+                    document.getElementById('valNoFineDate').textContent = data.fineDates.no_fine_due_date || '-';
+                    document.getElementById('valFineDate').textContent = data.fineDates.fine_due_date || '-';
+                } else {
+                    finesInfo.classList.add('hidden');
+                }
+            }
             
             const tbody = document.querySelector('#recentMealsTable tbody');
             tbody.innerHTML = '';

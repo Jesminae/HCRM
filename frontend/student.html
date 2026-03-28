@@ -23,7 +23,7 @@
         <div class="top-widget-grid">
             <div class="stat-widget">
                 <h2 style="color: #1565c0;" id="totalMeals">0</h2>
-                <p>Billed Days</p>
+                <p>Total Points</p>
             </div>
             <div class="stat-widget">
                 <h2 style="color: #e65100;">₹<span id="totalFee">0.00</span></h2>
@@ -142,9 +142,29 @@
                 <input type="month" id="summaryMonth" style="padding: 0.4rem; font-size: 0.9rem; border: 1px solid #ccc; border-radius: 4px;" required>
             </div>
             
-            <p style="text-align: center; margin-top: 1rem; color: #666; background: white; padding: 10px; border-radius: 8px;">
-                Based on per-day rate: ₹<span id="rateDisplay">0</span>
-            </p>
+            <div style="background: white; padding: 15px; border-radius: 12px; margin-bottom: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.03);">
+                <h4 style="margin-top: 0; color: #1565c0;">Fee Breakdown</h4>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                    <span>Total Points (Meals):</span> <strong id="valPoints">0</strong>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                    <span>Rate Per Day:</span> <strong>₹<span id="valRate">0</span></strong>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                    <span>Establishment Charge:</span> <strong>₹<span id="valEstt">0</span></strong>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 8px; border-bottom: 1px solid #eee; padding-bottom: 8px;">
+                    <span>Cook Charge:</span> <strong>₹<span id="valCook">0</span></strong>
+                </div>
+                <div style="display: flex; justify-content: space-between; font-size: 1.1rem; color: #e65100;">
+                    <strong>Total Calculated Fee:</strong> <strong>₹<span id="valTotalFee">0.00</span></strong>
+                </div>
+                <!-- Fines info -->
+                <div id="finesInfo" class="hidden" style="margin-top: 15px; padding-top: 15px; border-top: 1px solid #eee; font-size: 0.85rem; color: #ef4444;">
+                    <p style="margin: 0; margin-bottom: 4px;">• Pay without fine up to: <strong id="valNoFineDate"></strong></p>
+                    <p style="margin: 0;">• Pay with ₹30 fine up to: <strong id="valFineDate"></strong></p>
+                </div>
+            </div>
 
             <h4 style="margin: 20px 0 10px; color: #2b2b2b;">Recent Meal Entries</h4>
             <div style="overflow-x: auto; background: white; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.03);">
