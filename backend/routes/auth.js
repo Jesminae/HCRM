@@ -47,8 +47,8 @@ router.post('/login', async (req, res) => {
             hostel_group: user.hostel_group
         };
 
-        // If student, attach student_id
-        if (user.role === 'student') {
+        // If student or temporary inmate, attach student_id
+        if (user.role === 'student' || user.role === 'temporary') {
             const [students] = await db.query('SELECT id FROM Students WHERE user_id = ?', [user.id]);
             if (students.length > 0) {
                 tokenPayload.student_id = students[0].id;
@@ -97,8 +97,7 @@ router.post('/forgot-password', async (req, res) => {
     try {
         const [users] = await db.query('SELECT id, name FROM Users WHERE email = ?', [email]);
         if (users.length === 0) {
-            // Return success even if not found to prevent email enumeration
-            return res.json({ message: 'If an account exists, a recovery email was sent.' });
+            return res.status(404).json({ error: 'No account found with that email address.' });
         }
 
         const user = users[0];
@@ -109,30 +108,44 @@ router.post('/forgot-password', async (req, res) => {
         
         await db.query('UPDATE Users SET password = ? WHERE id = ?', [hashed, user.id]);
 
-        // Create ethereal test account & send email
-        const testAccount = await nodemailer.createTestAccount();
-        const transporter = nodemailer.createTransport({
-            host: "smtp.ethereal.email",
-            port: 587,
-            secure: false, 
-            auth: {
-                user: testAccount.user,
-                pass: testAccount.pass,
-            },
-        });
+        // Professional Email Sending via real SMTP (e.g. Gmail)
+        try {
+            const transporter = nodemailer.createTransport({
+                service: 'gmail', // Standard configuration for Gmail
+                auth: {
+                    user: process.env.EMAIL_USER,
+                    pass: process.env.EMAIL_PASS,
+                },
+            });
 
-        const info = await transporter.sendMail({
-            from: '"Hostel Admin" <admin@hostel.com>',
-            to: email,
-            subject: "Password Reset Details",
-            text: `Hello ${user.name},\n\nYour password has been reset.\nNew Password: ${newPassword}\n\nPlease login and change it immediately.`,
-        });
+            const emailOptions = {
+                from: `"Hostel Management System" <${process.env.EMAIL_USER}>`,
+                to: email,
+                subject: "Password Reset Details - Hostel Management",
+                text: `Hello ${user.name},\n\nYour password has been successfully reset.\nYour new temporary password is: ${newPassword}\n\nPlease login using this password and change it immediately for security purposes.\n\nRegards,\nHostel Admin`,
+                html: `
+                    <div style="font-family: Arial, sans-serif; padding: 20px; color: #333;">
+                        <h2 style="color: #4f46e5;">Password Reset</h2>
+                        <p>Hello <strong>${user.name}</strong>,</p>
+                        <p>Your password has been successfully reset.</p>
+                        <div style="background-color: #f3f4f6; padding: 15px; border-radius: 5px; margin: 20px 0; display: inline-block;">
+                            <span style="font-size: 1.2rem; font-family: monospace; letter-spacing: 1px;">${newPassword}</span>
+                        </div>
+                        <p>Please login using this temporary password and change it immediately for security purposes.</p>
+                        <br>
+                        <p style="color: #666; font-size: 0.9rem;">Regards,<br>Hostel Admin</p>
+                    </div>
+                `
+            };
 
-        console.log("===============================");
-        console.log("Preview Forgot Password Email: ", nodemailer.getTestMessageUrl(info));
-        console.log("===============================");
-
-        res.json({ message: 'If an account exists, a recovery email was sent.' });
+            await transporter.sendMail(emailOptions);
+            
+            // Return professional success message
+            return res.json({ message: 'A recovery email has been sent to your registered email address.' });
+        } catch (mailErr) {
+            console.error("Email sending failed:", mailErr);
+            return res.status(500).json({ error: 'Failed to send recovery email. Please contact administration.' });
+        }
     } catch (err) {
         console.error(err);
         res.status(500).json({ error: 'Failed to process request' });

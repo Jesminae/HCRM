@@ -30,6 +30,10 @@
                 <div class="feature-icon bg-orange">👥</div>
                 <span>System Users</span>
             </div>
+            <div class="feature-card" onclick="openSection('statsSection'); if(typeof loadStats === 'function') loadStats();">
+                <div class="feature-icon bg-green">📊</div>
+                <span>Dashboard Stats</span>
+            </div>
         </div>
 
         <!-- HIDDEN VIEW SECTIONS -->
@@ -59,6 +63,7 @@
                     <label>Role</label>
                     <select id="role" required onchange="toggleRoleFields()">
                         <option value="student">Student</option>
+                        <option value="temporary">Temporary Inmate</option>
                         <option value="committee">Committee</option>
                         <option value="warden">Warden</option>
                         <option value="admin">Admin</option>
@@ -112,11 +117,88 @@
                             <th>Email</th>
                             <th>Role</th>
                             <th>Group / Blk</th>
+                            <th>Room No</th>
                             <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
                         <!-- Populated by JS -->
+                    </tbody>
+                </table>
+            </div>
+            <br>
+            <h4 style="margin-left: 5px;">Temporary Inmates</h4>
+            <div style="overflow-x: auto; background: white; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.03);">
+                <table id="tempUsersTable" style="margin: 0; min-width: 600px;">
+                    <thead style="background: #f1f5f9;">
+                        <tr>
+                            <th>Name</th>
+                            <th>Username</th>
+                            <th>Email</th>
+                            <th>Hostel Type</th>
+                            <th>Block</th>
+                            <th>Room No</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Populated by JS -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- 3. Dashboard Stats Section -->
+        <div id="statsSection" class="view-section">
+            <div class="back-btn" onclick="closeSection('statsSection')">← Back to Dashboard</div>
+            <h3>Dashboard Statistics</h3>
+            
+            <div style="margin: 15px 0; background: white; padding: 15px; border-radius: 12px; display: flex; align-items: center; justify-content: space-between;">
+                <label style="font-weight: bold; color: #555;">Select Month:</label>
+                <input type="month" id="statsMonth" onchange="loadStats()" style="padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
+            </div>
+
+            <h4 style="margin: 20px 0 10px;">Total Current Regular Students</h4>
+            <div style="overflow-x: auto; background: white; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.03); margin-bottom: 20px;">
+                <table id="totalBlockTable" style="margin: 0; width: 100%;">
+                    <thead style="background: #f1f5f9;">
+                        <tr>
+                            <th>Hostel Type</th>
+                            <th>Block</th>
+                            <th>Total Students</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+
+            <h4 style="margin: 20px 0 10px;">Total Current Temporary Inmates</h4>
+            <div style="overflow-x: auto; background: white; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.03); margin-bottom: 20px;">
+                <table id="totalTempTable" style="margin: 0; width: 100%;">
+                    <thead style="background: #f1f5f9;">
+                        <tr>
+                            <th>Hostel Type</th>
+                            <th>Block</th>
+                            <th>Total Students</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+
+            <h4 style="margin: 20px 0 10px;">Active Students in Month (Based on Meals)</h4>
+            <div style="overflow-x: auto; background: white; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.03);">
+                <table id="activeMonthTable" style="margin: 0; width: 100%;">
+                    <thead style="background: #f1f5f9;">
+                        <tr>
+                            <th>Hostel Type</th>
+                            <th>Block</th>
+                            <th>Active Count</th>
+                        </tr>
+                    </thead>
+                    <tbody>
                     </tbody>
                 </table>
             </div>

@@ -12,6 +12,7 @@ const parseHostelGroup = (group) => {
         case 'LHB': return { type: 'LH', blocks: ['B'] };
         case 'MHA': return { type: 'MH', blocks: ['A'] };
         case 'MHB': return { type: 'MH', blocks: ['B'] };
+        case 'TEMPORARY': return { isTemp: true };
         default: return null;
     }
 };
@@ -63,13 +64,20 @@ router.get('/student-fees', async (req, res) => {
         if (group !== 'ALL') {
             const parsed = parseHostelGroup(group);
             if (parsed) {
-                blockFilter = 'AND s.block IN (?) AND u.hostel_type = ?';
-                queryParams.push(parsed.blocks);
-                queryParams.push(parsed.type);
+                if (parsed.isTemp) {
+                    blockFilter = 'AND u.role = ?';
+                    queryParams.push('temporary');
+                } else {
+                    blockFilter = 'AND s.block IN (?) AND u.hostel_type = ? AND u.role != ?';
+                    queryParams.push(parsed.blocks);
+                    queryParams.push(parsed.type);
+                    queryParams.push('temporary');
+                }
             }
         } else if (type !== 'ALL') {
-            typeFilter = 'AND u.hostel_type = ?';
+            typeFilter = 'AND u.hostel_type = ? AND u.role != ?';
             queryParams.push(type);
+            queryParams.push('temporary');
         }
         
         queryParams.push(month);
@@ -93,7 +101,8 @@ router.get('/student-fees', async (req, res) => {
         
         const [students] = await db.query(query, queryParams);
         
-        const getStudentFeeRate = (studentBlock, studentType) => {
+        const getStudentFeeRate = (studentBlock, studentType, studentRole) => {
+             if (studentRole === 'temporary') return feeMap['TEMPORARY'] !== undefined ? feeMap['TEMPORARY'] : globalRate;
              let studentGroup = 'ALL';
              if (studentType === 'LH') {
                  if (studentBlock === 'A' || studentBlock === 'C') studentGroup = 'LHA&C';
@@ -106,7 +115,7 @@ router.get('/student-fees', async (req, res) => {
         };
 
         const results = students.map(student => {
-            const studentRate = getStudentFeeRate(student.block, student.hostel_type);
+            const studentRate = getStudentFeeRate(student.block, student.hostel_type, student.hostel_type ? 'student' : 'temporary');
             return {
                 ...student,
                 active_days: student.active_days || 0,

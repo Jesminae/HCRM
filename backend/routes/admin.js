@@ -12,13 +12,58 @@ router.use(requireRole(['admin']));
 router.get('/users', async (req, res) => {
     try {
         const [users] = await db.query(`
-            SELECT u.id, u.name, u.username, u.email, u.role, u.hostel_group, u.hostel_type, s.block 
+            SELECT u.id, u.name, u.username, u.email, u.role, u.hostel_group, u.hostel_type, s.block, s.room_no 
             FROM Users u 
             LEFT JOIN Students s ON u.id = s.user_id
         `);
         res.json(users);
     } catch (err) {
         res.status(500).json({ error: 'Failed to fetch users' });
+    }
+});
+
+// Get Admin Dashboard Stats
+router.get('/dashboard-stats', async (req, res) => {
+    const { month } = req.query; // e.g. 'YYYY-MM'
+    if (!month) return res.status(400).json({ error: 'Month is required' });
+
+    try {
+        // Total completely registered regular students
+        const [totalRegularStudents] = await db.query(`
+            SELECT u.hostel_type, s.block, COUNT(DISTINCT u.id) as count
+            FROM Users u
+            JOIN Students s ON u.id = s.user_id
+            WHERE u.role = 'student' AND s.block IS NOT NULL
+            GROUP BY u.hostel_type, s.block
+        `);
+
+        // Total completely registered temporary inmates
+        const [totalTemporaryStudents] = await db.query(`
+            SELECT u.hostel_type, s.block, COUNT(DISTINCT u.id) as count
+            FROM Users u
+            JOIN Students s ON u.id = s.user_id
+            WHERE u.role = 'temporary' AND s.block IS NOT NULL
+            GROUP BY u.hostel_type, s.block
+        `);
+
+        // Active students that had meals in the given month, grouped by hostel_type and block
+        const [activeThisMonth] = await db.query(`
+            SELECT u.hostel_type, s.block, COUNT(DISTINCT m.student_id) as count
+            FROM Meals m
+            JOIN Students s ON m.student_id = s.id
+            JOIN Users u ON s.user_id = u.id
+            WHERE m.date LIKE CONCAT(?, '%') AND u.role IN ('student', 'temporary')
+            GROUP BY u.hostel_type, s.block
+        `, [month]);
+
+        res.json({
+            totalRegularStudents,
+            totalTemporaryStudents,
+            activeThisMonth
+        });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Failed to fetch dashboard stats' });
     }
 });
 
@@ -45,12 +90,12 @@ router.post('/users', async (req, res) => {
                     email, 
                     hashedPassword, 
                     role, 
-                    (role === 'student' || role === 'warden') ? null : (hostel_group || null), 
+                    (role === 'student' || role === 'warden' || role === 'temporary') ? null : (hostel_group || null), 
                     (role === 'warden') ? null : (hostel_type || null)
                 ]
             );
             
-            if (role === 'student') {
+            if (role === 'student' || role === 'temporary') {
                 await conn.query(
                     'INSERT INTO Students (user_id, room_no, block, hostel_type) VALUES (?, ?, ?, ?)',
                     [result.insertId, room_no || null, block || null, hostel_type || null]

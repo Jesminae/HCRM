@@ -9,6 +9,7 @@ const adminRoutes = require('./routes/admin');
 const committeeRoutes = require('./routes/committee');
 const wardenRoutes = require('./routes/warden');
 const studentRoutes = require('./routes/student');
+const temporaryRoutes = require('./routes/temporary');
 
 const app = express();
 app.use(cors());
@@ -24,6 +25,7 @@ app.use('/api/admin', adminRoutes);
 app.use('/api/committee', committeeRoutes);
 app.use('/api/warden', wardenRoutes);
 app.use('/api/student', studentRoutes);
+app.use('/api/temporary', temporaryRoutes);
 
 // Simple test route
 app.get('/api/health', (req, res) => {
