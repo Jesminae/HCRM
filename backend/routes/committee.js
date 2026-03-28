@@ -152,7 +152,7 @@ router.get('/attendance-all', async (req, res) => {
         if (!parsed) return res.json([]);
 
         const query = `
-            SELECT u.name, s.room_no, s.block, a.status 
+            SELECT u.name, u.role, s.room_no, s.block, a.status 
             FROM Students s
             JOIN Users u ON s.user_id = u.id AND u.hostel_type = ?
             LEFT JOIN Attendance a ON s.id = a.student_id AND a.date = ?

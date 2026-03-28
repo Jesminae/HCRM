@@ -197,7 +197,15 @@ async function loadAttendanceReview() {
             return;
         }
 
+        const regRecords = [];
+        const tempRecords = [];
+
         records.forEach(r => {
+            if (r.role === 'temporary') tempRecords.push(r);
+            else regRecords.push(r);
+        });
+
+        const renderRow = (r) => {
             const tr = document.createElement('tr');
             let badge = '<span class="badge badge-danger" style="background:#666">Unmarked</span>';
             if (r.status === 'Present') badge = '<span class="badge badge-success">Present</span>';
@@ -210,7 +218,21 @@ async function loadAttendanceReview() {
                 <td>${badge}</td>
             `;
             tbody.appendChild(tr);
-        });
+        };
+
+        if (regRecords.length > 0) {
+            const tr = document.createElement('tr');
+            tr.innerHTML = '<td colspan="4" style="background:#f1f5f9; font-weight:bold; text-align:center;">Regular Students</td>';
+            tbody.appendChild(tr);
+            regRecords.forEach(renderRow);
+        }
+
+        if (tempRecords.length > 0) {
+            const tr = document.createElement('tr');
+            tr.innerHTML = '<td colspan="4" style="background:#f1f5f9; font-weight:bold; text-align:center;">Temporary Inmates</td>';
+            tbody.appendChild(tr);
+            tempRecords.forEach(renderRow);
+        }
     } catch (err) {
         tbody.innerHTML = '<tr><td colspan="4" style="color:var(--error-color)">Failed to load data</td></tr>';
     }

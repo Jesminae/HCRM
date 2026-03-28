@@ -100,11 +100,8 @@ async function loadStudentReport() {
         
         if (records.length === 0) {
              tbody.innerHTML = '<tr><td colspan="5">No data found</td></tr>';
-             document.getElementById('displayRate').textContent = '0';
              return;
         }
-
-        document.getElementById('displayRate').textContent = records[0].per_day_rate || 0;
 
         records.forEach(r => {
             const tr = document.createElement('tr');
@@ -144,10 +141,15 @@ async function loadAttendanceReview() {
             'LHB': [],
             'MHA': [],
             'MHB': [],
+            'Temporary Inmates': [],
             'Other': []
         };
         
         records.forEach(r => {
+            if (r.role === 'temporary') {
+                groups['Temporary Inmates'].push(r);
+                return;
+            }
             const t = r.hostel_type || 'LH'; 
             const b = r.block || '';
             let key = 'Other';
